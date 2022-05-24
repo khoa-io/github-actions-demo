@@ -19,6 +19,8 @@ jobs:
           echo "USER=${USER}"
           echo "UID=${UID}"
           echo "GID=${GID}"
+          echo ID_U=`id -u`
+          echo ID_G=`id -g`
 
       - uses: uraimo/run-on-arch-action@v2
         name: Run Dart on aarch64
