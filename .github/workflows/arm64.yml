@@ -57,6 +57,8 @@ jobs:
             git status
             git log -1
             git diff
+            echo ${BUILD_VERSION}
+            echo ${BUILD_BRANCH}
 
       - name: Show some information
         run: |
@@ -65,3 +67,5 @@ jobs:
           git status
           git log -1
           git diff
+          echo ${{ env.BUILD_VERSION }}
+          echo ${{ env.BUILD_BRANCH }}
