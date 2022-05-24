@@ -45,6 +45,7 @@ jobs:
           env: |
             BUILD_VERSION: "${{ env.BUILD_VERSION }}"
             BUILD_BRANCH: "${{ github.head_ref }}"
+            PUB_CACHE: "${HOME}/.pub-cache"
           install: |
             echo "DART_HOME=/dart-sdk" >> ${HOME}/.bashrc
           run: |
