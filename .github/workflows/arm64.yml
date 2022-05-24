@@ -33,6 +33,7 @@ jobs:
             BUILD_VERSION: "${{ env.BUILD_VERSION }}"
             BUILD_BRANCH: "${{ github.head_ref }}"
           install: |
+            apt update && apt install -y git
             echo "PUB_CACHE=/source/.pub-cache" >> ${HOME}/.bashrc
             echo "DART_HOME=/source/dartsdk" >> ${HOME}/.bashrc
           run: |
