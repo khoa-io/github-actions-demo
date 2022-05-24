@@ -9,17 +9,39 @@ on:
 jobs:
   dart-aarch64:
     runs-on: "ubuntu-latest"
-    container:
-      image:
-        arm64v8/dart
-      options: --tty --platform linux/arm64
     steps:
       - uses: actions/checkout@v3
       - name: Compute BUILD_VERSION
         run: echo "BUILD_VERSION=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
 
-      - name: Show BUILD_VERSION
-        run: echo "BUILD_VERSION=${{ env.BUILD_VERSION }}"
+      - uses: uraimo/run-on-arch-action@v2
+        name: Run Dart on aarch64
+        with:
+          arch: aarch64
+          distro: ubuntu18.04
+          setup: |
+            curl --connect-timeout 15 --retry 5 "https://storage.googleapis.com/dart-archive/channels/be/raw/latest/sdk/dartsdk-linux-arm64-release.zip" > "${PWD}/dartsdk.zip"
+            unzip -o "${PWD}/dartsdk.zip" -d "${PWD}" > /dev/null
+            if [ $? -ne 0 ]; then
+              echo -e "::error::Download failed! Please check passed arguments."
+              exit 1
+            fi
+            rm "${PWD}/dartsdk.zip"
+          dockerRunArgs: |
+            --volume "${PWD}:/source"
+          env: |
+            BUILD_VERSION: "${{ env.BUILD_VERSION }}"
+            BUILD_BRANCH: "${{ github.head_ref }}"
+          install: |
+            echo "PUB_CACHE=/source/.pub-cache" >> ${HOME}/.bashrc
+            echo "DART_HOME=/source/dartsdk" >> ${HOME}/.bashrc
+          run: |
+            cd /source
+            /source/dart-sdk/bin/dart --version
+            pwd
+            ls -la
+            git status
+            log log -n1
 
       - name: Show Dart SDK version
         run: echo "Dart SDK version `dart --version`"
