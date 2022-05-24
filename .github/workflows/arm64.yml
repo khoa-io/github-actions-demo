@@ -7,8 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  dart-arm64:
-    name: "Check if Dart is ready for arm64"
+  dart-aarch64:
     runs-on: "ubuntu-latest"
     container:
       image:
@@ -24,3 +23,12 @@ jobs:
 
       - name: Show Dart SDK version
         run: echo "Dart SDK version `dart --version`"
+
+      - name: List files
+        run: pwd && ls -la
+
+      - name: Git status
+        run: git status
+
+      - name: Git log
+        run: git log -n 1
