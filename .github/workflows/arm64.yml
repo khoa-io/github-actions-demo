@@ -30,34 +30,37 @@ jobs:
           arch: aarch64
           distro: ubuntu18.04
           setup: |
-            curl --connect-timeout 15 --retry 5 "https://storage.googleapis.com/dart-archive/channels/be/raw/latest/sdk/dartsdk-linux-arm64-release.zip" > "${PWD}/dartsdk.zip"
-            unzip -o "${PWD}/dartsdk.zip" -d "${PWD}" > /dev/null
+            curl --connect-timeout 15 --retry 5 "https://storage.googleapis.com/dart-archive/channels/be/raw/latest/sdk/dartsdk-linux-arm64-release.zip" > "${HOME}/dartsdk.zip"
+            unzip -o "${HOME}/dartsdk.zip" -d "${HOME}" > /dev/null
             if [ $? -ne 0 ]; then
               echo -e "::error::Download failed! Please check passed arguments."
               exit 1
             fi
-            rm "${PWD}/dartsdk.zip"
+            rm "${HOME}/dartsdk.zip"
           dockerRunArgs: |
             --volume "${PWD}:/source"
+            --volume "${HOME}/dartsdk:/dartsdk"
             --user "${{ env.RUNNER_UID }}:${{ env.RUNNER_GID }}"
           env: |
             BUILD_VERSION: "${{ env.BUILD_VERSION }}"
             BUILD_BRANCH: "${{ github.head_ref }}"
           install: |
             apt update && apt install -y git
-            echo "PUB_CACHE=/source/.pub-cache" >> ${HOME}/.bashrc
-            echo "DART_HOME=/source/dartsdk" >> ${HOME}/.bashrc
+            echo "PUB_CACHE=/.pub-cache" >> ${HOME}/.bashrc
+            echo "DART_HOME=/dartsdk" >> ${HOME}/.bashrc
           run: |
             cd /source
-            /source/dart-sdk/bin/dart --version
+            /dart-sdk/bin/dart --version
             pwd
             ls -la
             git status
-            log log -n1
+            git log -1
+            git diff
 
       - name: Show some information
         run: |
           pwd
           ls -la
           git status
-          git log -n 1
+          git log -1
+          git diff
