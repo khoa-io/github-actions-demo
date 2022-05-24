@@ -14,6 +14,12 @@ jobs:
       - name: Compute BUILD_VERSION
         run: echo "BUILD_VERSION=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
 
+      - name: Show environment
+        run: |
+          echo "USER=${USER}"
+          echo "USERNAME=${USERNAME}"
+          echo "UID=${UID}"
+
       - uses: uraimo/run-on-arch-action@v2
         name: Run Dart on aarch64
         with:
@@ -29,6 +35,7 @@ jobs:
             rm "${PWD}/dartsdk.zip"
           dockerRunArgs: |
             --volume "${PWD}:/source"
+            --user "${USER}:${UID}"
           env: |
             BUILD_VERSION: "${{ env.BUILD_VERSION }}"
             BUILD_BRANCH: "${{ github.head_ref }}"
