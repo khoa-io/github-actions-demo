@@ -17,8 +17,8 @@ jobs:
       - name: Show environment
         run: |
           echo "USER=${USER}"
-          echo "USERNAME=${USERNAME}"
           echo "UID=${UID}"
+          echo "GID=${GID}"
 
       - uses: uraimo/run-on-arch-action@v2
         name: Run Dart on aarch64
@@ -35,7 +35,7 @@ jobs:
             rm "${PWD}/dartsdk.zip"
           dockerRunArgs: |
             --volume "${PWD}:/source"
-            --user "${USER}:${UID}"
+            --user "${UID}:${GID}"
           env: |
             BUILD_VERSION: "${{ env.BUILD_VERSION }}"
             BUILD_BRANCH: "${{ github.head_ref }}"
@@ -51,14 +51,9 @@ jobs:
             git status
             log log -n1
 
-      - name: Show Dart SDK version
-        run: echo "Dart SDK version `dart --version`"
-
-      - name: List files
-        run: pwd && ls -la
-
-      - name: Git status
-        run: git status
-
-      - name: Git log
-        run: git log -n 1
+      - name: Show some information
+        run: |
+          pwd
+          ls -la
+          git status
+          git log -n 1
