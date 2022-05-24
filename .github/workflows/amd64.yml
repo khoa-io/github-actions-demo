@@ -1,0 +1,26 @@
+name: x86_64
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  dart-arm64:
+    name: "Check if Dart is ready for arm64"
+    runs-on: "ubuntu-latest"
+    container:
+      image:
+        dart
+      options: --tty --platform linux/amd64
+    steps:
+      - uses: actions/checkout@v3
+      - name: Compute BUILD_VERSION
+        run: echo "BUILD_VERSION=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
+
+      - name: Show BUILD_VERSION
+        run: echo "BUILD_VERSION=${{ env.BUILD_VERSION }}"
+
+      - name: Show Dart SDK version
+        run: echo "Dart SDK version `dart --version`"

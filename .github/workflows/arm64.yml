@@ -1,4 +1,4 @@
-name: CI
+name: aarch64
 
 on:
   push:
@@ -14,17 +14,10 @@ jobs:
       image:
         arm64v8/dart
       options: --tty --platform linux/arm64
-    env:
-      BUILD_OS: "linux"
-      BUILD_ARCH: "${{ matrix.arch }}"
     steps:
       - uses: actions/checkout@v3
       - name: Compute BUILD_VERSION
         run: echo "BUILD_VERSION=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
-      - uses: dart-lang/setup-dart@v1.3
-        with:
-          sdk: stable
-          architecture: x64
 
       - name: Show BUILD_VERSION
         run: echo "BUILD_VERSION=${{ env.BUILD_VERSION }}"
