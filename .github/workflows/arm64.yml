@@ -50,7 +50,7 @@ jobs:
             echo "DART_HOME=/dartsdk" >> ${HOME}/.bashrc
           run: |
             cd /source
-            /dart-sdk/bin/dart --version
+            /dartsdk/bin/dart --version
             pwd
             ls -la
             git status
